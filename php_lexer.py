@@ -20,7 +20,7 @@ import ply.lex as lex
 tokens = (
 
     # OPEN AND CLOSE TAG
-    'LONG_OPENTAG','SHORT_OPENTAG','CLOSETAG',
+    'OPENTAG','CLOSETAG',
 
     # RESERVERD WORDS LIST 
     # http://php.net/manual/es/reserved.keywords.php
@@ -36,7 +36,7 @@ tokens = (
     # SYMBOLS
     'PLUS','PLUSPLUS','PLUSEQUAL','MINUS','MINUSMINUS','MINUSEQUAL','TIMES',
     'TIMESTIMES','DIVIDE','LESS','LESSEQUAL','GREATER','GREATEREQUAL','EQUAL',
-    'DEQUAL','DISTINT','ISEQUAL','SEMICOLON','COMMA','LPAREN','RPAREN','LBRACKET',
+    'DEQUAL','DISTINT','ISEQUAL','SEMI','COMMA','LPAREN','RPAREN','LBRACKET',
     'RBRACKET','LBLOCK','RBLOCK','COLON','AMPERSANT','HASHTAG','DOT','QUOTES',
     'APOSTROPHE','DOT_DOT',
 
@@ -61,12 +61,8 @@ def t_error(t):
 
 
 # RE OPEN AND CLOSE TAG
-def t_LONG_OPENTAG(t):
-    r'<\?php'
-    return t
-
-def t_SHORT_OPENTAG(t):
-    r'<\?'
+def t_OPENTAG(t):
+    r'(<\?(php)?)'
     return t
 
 def t_CLOSETAG(t):
@@ -344,7 +340,7 @@ t_EQUAL     = r'='
 t_DISTINT   = r'!'
 t_LESS      = r'<'
 t_GREATER   = r'>'
-t_SEMICOLON = ';'
+t_SEMI = ';'
 t_COMMA     = r','
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
@@ -436,8 +432,8 @@ if __name__ == '__main__':
             tok = lexer.token()
             if not tok:
                 break
-            print "\t" +str(i) + " - " + str(tok)
-            i = i + 1  
+            print "\t"+str(i)+" - "+"Line: "+str(tok.lineno)+"\t"+str(tok.type)+"\t=>  "+str(tok.value)
+            i += 1  
 
         print chr(27)+"[0;36m"+"TERMINA ANALISIS LEXICO"+chr(27)+"[0m"
 
