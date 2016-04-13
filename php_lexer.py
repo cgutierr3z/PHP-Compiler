@@ -20,121 +20,47 @@ import ply.lex as lex
 tokens = (
 
     # OPEN AND CLOSE TAG
-    'LONG_OPENTAG',
-    'SHORT_OPENTAG',
-    'CLOSETAG',
+    'LONG_OPENTAG','SHORT_OPENTAG','CLOSETAG',
 
-    # RESERVERD WORDS LIST http://php.net/manual/es/reserved.keywords.php
-    '__HALT_COMPILER',
-    'ABSTRACT',
-    'AND',
-    'ARRAY',
-    'AS',
-    'BREAK',
-    'CALLABLE',
-    'CASE',
-    'CATCH',
-    'CLASS',
-    'CLONE',
-    'CONST',
-    'CONTINUE',
-    'DECLARE',
-    'DEFAULT',
-    'DIE',
-    'DO',
-    'ECHO',
-    'ELSE',
-    'ELSEIF',
-    'EMPTY',
-    'ENDDECLARE',
-    'ENDFOR',
-    'ENDFOREACH',
-    'ENDIF',
-    'ENDSWITCH',
-    'ENDWHILE',
-    'EVAL',
-    'EXIT',
-    'EXTENDS',
-    'CLOSETAGAL',
-    'FOR',
-    'FOREACH',
-    'FUNCTION',
-    'GLOBAL',
-    'GOTO',
-    'IF',
-    'IMPLEMENTS',
-    'INCLUDE',
-    'INCLUDE_ONCE',
-    'INSTANCEOF',
-    'INSTEADOF',
-    'INTERFACE',
-    'ISSET',
-    'LIST',
-    'NAMESPACE',
-    'NEW',
-    'OR',
-    'PRINT',
-    'PRIVATE',
-    'PROTECTED',
-    'PUBLIC',
-    'REQUIRE',
-    'REQUIRE_ONCE',
-    'RETURN',
-    'STATIC',
-    'SWITCH',
-    'THROW',
-    'TRAIT',
-    'TRY',
-    'UNSET',
-    'USE',
-    'VAR',
-    'WHILE',
-    'XOR',
+    # RESERVERD WORDS LIST 
+    # http://php.net/manual/es/reserved.keywords.php
+    '__HALT_COMPILER','ABSTRACT','AND','ARRAY','AS','BREAK','CALLABLE','CASE',
+    'CATCH','CLASS','CLONE','CONST','CONTINUE','DECLARE','DEFAULT','DIE','DO',
+    'ECHO','ELSE','ELSEIF','EMPTY','ENDDECLARE','ENDFOR','ENDFOREACH','ENDIF',
+    'ENDSWITCH','ENDWHILE','EVAL','EXIT','EXTENDS','CLOSETAGAL','FOR','FOREACH',
+    'FUNCTION','GLOBAL','GOTO','IF','IMPLEMENTS','INCLUDE','INCLUDE_ONCE',
+    'INSTANCEOF','INSTEADOF','INTERFACE','ISSET','LIST','NAMESPACE','NEW','OR',
+    'PRINT','PRIVATE','PROTECTED','PUBLIC','REQUIRE','REQUIRE_ONCE','RETURN',
+    'STATIC','SWITCH','THROW','TRAIT','TRY','UNSET','USE','VAR','WHILE','XOR',
 
     # SYMBOLS
-    'PLUS',
-    'PLUSPLUS',
-    'PLUSEQUAL',
-    'MINUS',
-    'MINUSMINUS',
-    'MINUSEQUAL',
-    'TIMES',
-    'TIMESTIMES',
-    'DIVIDE',
-    'LESS',
-    'LESSEQUAL',
-    'GREATER',
-    'GREATEREQUAL',
-    'EQUAL',
-    'DEQUAL',
-    'DISTINT',
-    'ISEQUAL',
-    'SEMICOLON',
-    'COMMA',
-    'LPAREN',
-    'RPAREN',
-    'LBRACKET',
-    'RBRACKET',
-    'LBLOCK',
-    'RBLOCK',
-    'COLON',
-    'AMPERSANT',
-    'HASHTAG',
-    'DOT',
-    'QUOTES',
-    'APOSTROPHE',
-    'DOT_DOT',
+    'PLUS','PLUSPLUS','PLUSEQUAL','MINUS','MINUSMINUS','MINUSEQUAL','TIMES',
+    'TIMESTIMES','DIVIDE','LESS','LESSEQUAL','GREATER','GREATEREQUAL','EQUAL',
+    'DEQUAL','DISTINT','ISEQUAL','SEMICOLON','COMMA','LPAREN','RPAREN','LBRACKET',
+    'RBRACKET','LBLOCK','RBLOCK','COLON','AMPERSANT','HASHTAG','DOT','QUOTES',
+    'APOSTROPHE','DOT_DOT',
 
     # OTHERS
-    'ID',
-    'NUMBER',
-    'ID2',
-    'STRING',
-    'COMMENTS_C99',
-    'COMMENTS',
+    'COMMENTS','COMMENTS_C99','ID','IDVAR','NUM','STRING',
 )
 
 
+# RE Tokens
+
+# Take from: http://www.dabeaz.com/ply/example.html
+# Ignored characters 
+t_ignore = " \t" 
+
+def t_newline(t): 
+    r'\n+' 
+    t.lexer.lineno += t.value.count("\n") 
+
+def t_error(t): 
+    print("Illegal character '%s'" % t.value[0]) 
+    t.lexer.skip(1)
+
+
+# RE OPEN AND CLOSE TAG
 def t_LONG_OPENTAG(t):
     r'<\?php'
     return t
@@ -147,6 +73,8 @@ def t_CLOSETAG(t):
     r'\?>'
     return t
 
+
+# RE RESERVERD WORDS LIST 
 def t___HALT_COMPILER(t):
     r'__halt_compiler'
     return t
@@ -407,6 +335,7 @@ def t_XOR(t):
     r'xor'
     return t
 
+# RE SYMBOLS
 t_PLUS      = r'\+'
 t_MINUS     = r'-'
 t_TIMES     = r'\*'
@@ -429,22 +358,6 @@ t_HASHTAG   = r'\#'
 t_DOT       = r'\.'
 t_QUOTES    = r'\"'
 t_APOSTROPHE = r'\''
-
-
-# RE'S
-
-def t_NUMBER(t):
-    r'\d+(\.\d+)?'
-    t.value = float(t.value)
-    return t
-
-def t_ID(t):
-    r'\$\w+(\d\w)*'
-    return t
-
-def t_ID2(t):
-    r'\w+(\w\d)*'
-    return t
 
 def t_LESSEQUAL(t):
     r'<='
@@ -478,6 +391,8 @@ def t_DOT_DOT(t):
     r'::'
     return t
 
+
+# RE OTHERS 
 def t_COMMENTS(t):
     r'\/\*([^*]|\*[^\/])*(\*)+\/'
     t.lexer.lineno += t.value.count('\n')
@@ -486,20 +401,23 @@ def t_COMMENTS_C99(t):
     r'(\/\/|\#)(.)*?\n'
     t.lexer.lineno += 1
 
+def t_ID(t):
+    r'\w+(\w\d)*'
+    return t
+
+def t_IDVAR(t):
+    r'\$\w+(\d\w)*'
+    return t
+
+def t_NUM(t):
+    r'\d+(\.\d+)?'
+    t.value = float(t.value)
+    return t
+
 def t_STRING(t):
     r'(("[^"]*")|(\'[^\']*\'))'
     return t
 
-# Ignored characters 
-t_ignore = " \t" 
-
-def t_newline(t): 
-    r'\n+' 
-    t.lexer.lineno += t.value.count("\n") 
-
-def t_error(t): 
-    print("Illegal character '%s'" % t.value[0]) 
-    t.lexer.skip(1)
 
 lexer = lex.lex()
 
@@ -513,11 +431,14 @@ if __name__ == '__main__':
         lexer.input(scriptdata)
 
         print chr(27)+"[0;36m"+"INICIA ANALISIS LEXICO"+chr(27)+"[0m"
+        i = 1
         while True:
             tok = lexer.token()
             if not tok:
                 break
-            print (tok)
+            print "\t" +str(i) + " - " + str(tok)
+            i = i + 1  
+
         print chr(27)+"[0;36m"+"TERMINA ANALISIS LEXICO"+chr(27)+"[0m"
 
     else:
