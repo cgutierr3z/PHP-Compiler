@@ -22,7 +22,7 @@ tokens = (
     # OPEN AND CLOSE TAG
     'OPENTAG','CLOSETAG',
 
-    # RESERVERD WORDS LIST 
+    # RESERVERD WORDS LIST
     # http://php.net/manual/es/reserved.keywords.php
     '__HALT_COMPILER','ABSTRACT','AND','ARRAY','AS','BREAK','CALLABLE','CASE',
     'CATCH','CLASS','CLONE','CONST','CONTINUE','DECLARE','DEFAULT','DIE','DO',
@@ -48,15 +48,15 @@ tokens = (
 # RE Tokens
 
 # Take from: http://www.dabeaz.com/ply/example.html
-# Ignored characters 
-t_ignore = " \t" 
+# Ignored characters
+t_ignore = " \t"
 
-def t_newline(t): 
-    r'\n+' 
-    t.lexer.lineno += t.value.count("\n") 
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += t.value.count("\n")
 
-def t_error(t): 
-    print("Illegal character '%s'" % t.value[0]) 
+def t_error(t):
+    print chr(27)+"[1;31m"+"\t Illegal character " + t.value[0] +" "+chr(27)+"[0m"
     t.lexer.skip(1)
 
 
@@ -70,7 +70,7 @@ def t_CLOSETAG(t):
     return t
 
 
-# RE RESERVERD WORDS LIST 
+# RE RESERVERD WORDS LIST
 def t___HALT_COMPILER(t):
     r'__halt_compiler'
     return t
@@ -388,7 +388,7 @@ def t_DOT_DOT(t):
     return t
 
 
-# RE OTHERS 
+# RE OTHERS
 def t_COMMENTS(t):
     r'\/\*([^*]|\*[^\/])*(\*)+\/'
     t.lexer.lineno += t.value.count('\n')
@@ -420,7 +420,7 @@ lexer = lex.lex()
 if __name__ == '__main__':
     if (len(sys.argv) > 1):
         script = sys.argv[1]
-        
+
         scriptfile = open(script, 'r')
         scriptdata = scriptfile.read()
         #print (scriptdata)
@@ -433,11 +433,10 @@ if __name__ == '__main__':
             if not tok:
                 break
             print "\t"+str(i)+" - "+"Line: "+str(tok.lineno)+"\t"+str(tok.type)+"\t=>  "+str(tok.value)
-            i += 1  
+            i += 1
 
         print chr(27)+"[0;36m"+"TERMINA ANALISIS LEXICO"+chr(27)+"[0m"
 
     else:
         print chr(27)+"[0;31m"+"Pase el archivo de script PHP como parametro:"
         print chr(27)+"[0;36m"+"\t$ python php_lexer.py"+chr(27)+"[1;31m"+" <filename>.php"+chr(27)+"[0m"
-    
