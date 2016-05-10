@@ -389,6 +389,8 @@ def t_DOT_DOT(t):
 
 
 # RE OTHERS
+
+
 def t_COMMENTS(t):
     r'\/\*([^*]|\*[^\/])*(\*)+\/'
     t.lexer.lineno += t.value.count('\n')
@@ -397,17 +399,17 @@ def t_COMMENTS_C99(t):
     r'(\/\/|\#)(.)*?\n'
     t.lexer.lineno += 1
 
-def t_ID(t):
-    r'\w+(\w\d)*'
-    return t
-
 def t_IDVAR(t):
     r'\$\w+(\d\w)*'
     return t
 
 def t_NUM(t):
     r'\d+(\.\d+)?'
-    t.value = float(t.value)
+    t.value = int(t.value)
+    return t
+
+def t_ID(t):
+    r'\w+(\w\d)*'
     return t
 
 def t_STRING(t):
