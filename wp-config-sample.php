@@ -18,7 +18,8 @@
 /** Cotejamiento de la base de datos. No lo modifiques si tienes dudas. */
 define('DB_COLLATE', '');
 
-define('NONCE_SALT', 'pon aquí tu frase aleatoria'); // Cambia esto por tu frase aleatoria.
+define('NONCE_SALT', 'pon aquí tu frase aleatoria');
+// Cambia esto por tu frase aleatoria.
 
 $table_prefix  = 'wp_';
 
