@@ -56,7 +56,8 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
 
 def t_error(t):
-    print chr(27)+"[1;31m"+"\t Illegal character " + t.value[0] +" "+chr(27)+"[0m"
+    print chr(27)+"[1;31m"+"\t ERROR: Illegal character"+chr(27)+"[0m"
+    print "\t\tLine: "+str(t.lexer.lineno)+"\t=> " + t.value[0]
     t.lexer.skip(1)
 
 
@@ -340,7 +341,7 @@ t_EQUAL     = r'='
 t_DISTINT   = r'!'
 t_LESS      = r'<'
 t_GREATER   = r'>'
-t_SEMI = ';'
+t_SEMI      = r';'
 t_COMMA     = r','
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
@@ -434,7 +435,7 @@ if __name__ == '__main__':
             tok = lexer.token()
             if not tok:
                 break
-            print "\t"+str(i)+" - "+"Line: "+str(tok.lineno)+"\t"+str(tok.type)+"\t=>  "+str(tok.value)
+            print "\t"+str(i)+" - "+"Line: "+str(tok.lineno)+"\t"+str(tok.type)+"\t-->  "+str(tok.value)
             i += 1
 
         print chr(27)+"[0;36m"+"TERMINA ANALISIS LEXICO"+chr(27)+"[0m"
