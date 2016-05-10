@@ -150,7 +150,7 @@ def p_global_var_list(p):
 
 def p_global_var(p):
     '''global_var : IDVAR
-                  |  variable'''
+                  | variable'''
                  # | DOLLAR LBLOCK expr RBLOCK'''
     pass
 
@@ -229,7 +229,7 @@ def p_expr_assign(p):
 
 def p_variable(p):
     '''variable : IDVAR
-              | function_call'''
+                | function_call'''
     pass
 
 def p_function_call(p):
@@ -263,15 +263,9 @@ def p_expr_function(p):
 
 def p_expr_assign_op(p):
     '''expr : variable PLUSEQUAL expr
-            | variable MINUSEQUAL expr'''
-            # | variable MULEQUAL expr
-            # | variable DIVEQUAL expr
-            # | variable MODEQUAL expr
-            # | variable ANDEQUAL expr
-            # | variable OREQUAL expr
-            # | variable XOR_EQUAL expr
-            # | variable SL_EQUAL expr
-            # | variable SR_EQUAL expr'''
+            | variable MINUSEQUAL expr
+            | variable LESSEQUAL expr
+            | variable GREATEREQUAL expr'''
     pass
 
 def p_expr_binary_op(p):
@@ -283,13 +277,13 @@ def p_expr_binary_op(p):
             | expr MINUS expr
             | expr TIMES expr
             | expr DIVIDE expr'''
-            # | expr SL expr
-            # | expr SR expr'''
     pass
 
 def p_expr_unary_op(p):
     '''expr : PLUS expr
-            | MINUS expr'''
+            | MINUS expr
+            | GREATER expr
+            | LESS expr'''
     pass
 
 def p_expr_print(p):
@@ -321,9 +315,12 @@ def p_empty(p):
 def p_error(p):
     if VERBOSE:
         if p is not None:
-            print ("ERROR SINTACTICO EN LA LINEA " + str(p.lexer.lineno) + " NO SE ESPERABA EL Token  " + str(p.value))
+            print chr(27)+"[1;31m"+"\t ERROR: Syntax error - Unexpected token" + chr(27)+"[0m"
+            print "\t\tLine: "+str(p.lexer.lineno)+"\t=> "+str(p.value)
         else:
-            print ("ERROR SINTACTICO EN LA LINEA: " + str(cminus_lexer.lexer.lineno))
+            print chr(27)+"[1;31m"+"\t ERROR: Syntax error"+chr(27)+"[0m"
+            print "\t\tLine:  "+str(php_lexer.lexer.lineno)
+
     else:
         raise Exception('syntax', 'error')
 
@@ -340,7 +337,7 @@ if __name__ == '__main__':
 
         print chr(27)+"[0;36m"+"INICIA ANALISIS SINTACTICO"+chr(27)+"[0m"
         parser.parse(scriptdata, tracking=False)
-        print("Hola bebe, no tienes errores sintacticos")
+        #print("Hola bebe, no tienes errores sintacticos")
         print chr(27)+"[0;36m"+"TERMINA ANALISIS SINTACTICO"+chr(27)+"[0m"
 
     else:

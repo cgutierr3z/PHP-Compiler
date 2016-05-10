@@ -10,25 +10,19 @@
  * This file is used by the wp-config.php creation script during the
  * installation. You don't have to use the web site, you can just copy this file
  * to "wp-config.php" and fill in the values.
- *
- * @package WordPress
+
  */
 
+$b = $a;
 
-/** Cotejamiento de la base de datos. No lo modifiques si tienes dudas. */
-define('DB_COLLATE', '');
+if ($a <= $b) {
+  echo 'a es mayor que b';
+  $a = 2 + 5;
+  #$b = $a;
 
-define('NONCE_SALT', 'pon aquí tu frase aleatoria');
-// Cambia esto por tu frase aleatoria.
+}
 
-$table_prefix  = 'wp_';
+echo $b;
 
-$var = 55;
-
-$v = $var;
-
-hola = 10;
-
-%
 
 ?>
