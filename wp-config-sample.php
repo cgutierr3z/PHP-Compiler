@@ -13,16 +13,14 @@
 
  */
 
-$b = $a;
-
-if ($a <= $b) {
-  echo 'a es mayor que b';
-  $a = 2 + 5;
-  #$b = $a;
-
+if ($a >= $b){
+    echo "a es mayor que b";
 }
-
-echo $b;
-
+elseif ($a == $b){
+    echo "a es igual que b";
+}
+else{
+    echo "a es menor que b";
+}
 
 ?>

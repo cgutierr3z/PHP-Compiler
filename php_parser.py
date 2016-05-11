@@ -19,13 +19,34 @@ from php_lexer import tokens
 
 VERBOSE = 1
 
+precedence = (
+    ('left', 'INCLUDE', 'INCLUDE_ONCE', 'EVAL', 'REQUIRE', 'REQUIRE_ONCE'),
+    ('left', 'COMMA'),
+    ('right', 'PRINT'),
+    ('left', 'EQUAL', 'PLUSEQUAL', 'MINUSEQUAL'),
+    ('left', 'COLON'),
+    ('left', 'OR'),
+    ('left', 'XOR'),
+    ('left', 'AND'),
+    ('nonassoc', 'ISEQUAL', 'DEQUAL'),
+    ('nonassoc', 'LESS', 'LESSEQUAL', 'GREATER', 'GREATEREQUAL'),
+    ('left', 'PLUS', 'MINUS'),
+    ('nonassoc', 'INSTANCEOF'),
+    ('right', 'LBRACKET'),
+    ('nonassoc', 'NEW', 'CLONE'),
+    ('left', 'ELSEIF'),
+    ('left', 'ELSE'),
+    ('left', 'ENDIF'),
+    ('right', 'STATIC', 'ABSTRACT', 'PRIVATE', 'PROTECTED', 'PUBLIC'),
+)
+
 def p_start(p):
     'start : top_statement_list'
+    pass
 
 def p_top_statement_list(p):
     '''top_statement_list : OPENTAG top_statement_list top_statement CLOSETAG top_statement_list
-                            | top_statement
-                            | empty'''
+                          | top_statement'''
     pass
 
 def p_top_statement(p):
@@ -33,19 +54,6 @@ def p_top_statement(p):
                      | function_declaration_statement
                      | class_declaration_statement
                      | empty'''
-    pass
-
-def p_top_statement_constant(p):
-    'top_statement : CONST constant_declarations SEMI'
-    pass
-
-def p_constant_declarations(p):
-	'''constant_declarations : constant_declarations COMMA constant_declaration
-							 | constant_declaration'''
-	pass
-
-def p_constant_declaration(p):
-    'constant_declaration : IDVAR EQUAL static_scalar'
     pass
 
 def p_inner_statement_list(p):
@@ -59,21 +67,56 @@ def p_inner_statement(p):
                        | class_declaration_statement'''
     pass
 
+def p_statement(p):
+    'statement : expr SEMI'
+    pass
+
 def p_statement_if(p):
-    'statement : IF LPAREN expr RPAREN LBLOCK statement RBLOCK elseif_list else_single'
-                 #| IF LPAREN expr RPAREN COLON inner_statement_list new_elseif_list new_else_single ENDIF SEMI'''
+    '''statement : IF LPAREN expr RPAREN statement
+                 | IF LPAREN expr RPAREN LBLOCK statement RBLOCK elseif_list else_single'''
+    pass
+
+def p_elseif_list(p):
+    '''elseif_list : empty
+                   | elseif_list ELSEIF LPAREN expr RPAREN statement
+                   | elseif_list ELSEIF LPAREN expr RPAREN LBLOCK statement RBLOCK'''
+    pass
+
+def p_else_single(p):
+    '''else_single : empty
+                   | ELSE statement
+                   | ELSE LBLOCK statement RBLOCK'''
     pass
 
 def p_statement_while(p):
     'statement : WHILE LPAREN expr RPAREN while_statement'
     pass
 
+def p_while_statement(p):
+    'while_statement : statement'
+    pass
+
 def p_statement_do_while(p):
     'statement : DO statement WHILE LPAREN expr RPAREN SEMI'
     pass
 
+
 def p_statement_for(p):
     'statement : FOR LPAREN for_expr SEMI for_expr SEMI for_expr RPAREN for_statement'
+    pass
+
+def p_for_expr(p):
+    '''for_expr : empty
+                | non_empty_for_expr'''
+    pass
+
+def p_non_empty_for_expr(p):
+    '''non_empty_for_expr : non_empty_for_expr COMMA expr
+                          | expr'''
+    pass
+
+def p_for_statement(p):
+    'for_statement : statement'
     pass
 
 def p_statement_break(p):
@@ -95,63 +138,17 @@ def p_statement_global(p):
     'statement : GLOBAL global_var_list SEMI'
     pass
 
-def p_statement_static(p):
-    'statement : STATIC static_var_list SEMI'
-    pass
-
-def p_statement_echo(p):
-    'statement : ECHO echo_expr_list SEMI'
-    pass
-
-def p_statement_expr(p):
-    'statement : expr SEMI'
-    pass
-
-def p_statement_empty(p):
-    'statement : SEMI'
-    pass
-
-def p_elseif_list(p):
-    '''elseif_list : empty
-                   | elseif_list ELSEIF LPAREN expr RPAREN LBLOCK statement RBLOCK
-                   | elseif_list ELSEIF LPAREN expr RPAREN statement'''
-    pass
-
-def p_else_single(p):
-    '''else_single : empty
-                   | ELSE statement
-                   | ELSE LBLOCK statement RBLOCK'''
-    pass
-
-def p_while_statement(p):
-    'while_statement : statement'
-                     #  | COLON inner_statement_list ENDWHILE SEMI'''
-    pass
-
-def p_for_expr(p):
-    '''for_expr : empty
-                | non_empty_for_expr'''
-    pass
-
-def p_non_empty_for_expr(p):
-    '''non_empty_for_expr : non_empty_for_expr COMMA expr
-                          | expr'''
-    pass
-
-def p_for_statement(p):
-    'for_statement : statement'
-                    # | COLON inner_statement_list ENDFOR SEMI'''
-    pass
-
 def p_global_var_list(p):
     '''global_var_list : global_var_list COMMA global_var
                        | global_var'''
     pass
 
 def p_global_var(p):
-    '''global_var : IDVAR
-                  | variable'''
-                 # | DOLLAR LBLOCK expr RBLOCK'''
+    'global_var : IDVAR'
+    pass
+
+def p_statement_static(p):
+    'statement : STATIC static_var_list SEMI'
     pass
 
 def p_static_var_list(p):
@@ -164,10 +161,16 @@ def p_static_var(p):
                   | IDVAR'''
     pass
 
+def p_statement_echo(p):
+    'statement : ECHO echo_expr_list SEMI'
+    pass
+
 def p_echo_expr_list(p):
     '''echo_expr_list : echo_expr_list COMMA expr
-                      | expr'''
+                      | expr '''
     pass
+
+
 
 def p_function_declaration_statement(p):
     'function_declaration_statement : FUNCTION ID LPAREN parameter_list RPAREN LBLOCK inner_statement_list RBLOCK'
@@ -179,8 +182,6 @@ def p_class_declaration_statement(p):
 
 def p_class_entry_type(p):
     'class_entry_type : CLASS'
-                     #   | ABSTRACT CLASS
-                     #   | FINAL CLASS'''
     pass
 
 def p_class_statement_list(p):
@@ -224,8 +225,8 @@ def p_expr_variable(p):
     pass
 
 def p_expr_assign(p):
-    '''expr : variable EQUAL expr
-            | variable EQUAL AND expr'''
+    'expr : IDVAR EQUAL expr'
+    pass
 
 def p_variable(p):
     '''variable : IDVAR
@@ -241,8 +242,9 @@ def p_expr_scalar(p):
     pass
 
 def p_scalar(p):
-    'scalar : static_scalar'
-
+    '''scalar : NUM
+              | STRING'''
+    pass
 
 def p_function_call_parameter_list(p):
     '''function_call_parameter_list : function_call_parameter_list COMMA function_call_parameter
@@ -295,17 +297,9 @@ def p_expr_group(p):
     pass
 
 def p_static_scalar(p):
-    '''static_scalar : common_scalar
+    '''static_scalar : NUM
                      | STRING'''
-                     #| QUOTES TEXT QUOTES'''
-    pass
 
-def p_common_scalar_number(p):
-    'common_scalar : NUM'
-    pass
-
-def p_common_scalar_variable(p):
-    'common_scalar : IDVAR'
     pass
 
 def p_empty(p):
