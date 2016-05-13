@@ -13,14 +13,27 @@
 
  */
 
-if ($a >= $b){
-    echo "a es mayor que b";
+// Check for a false value of a letter that is not
+// in your own name and print out an error message
+
+if($a > $b){
+  echo "a es mayor que b";
+}elseif($a == $b){
+      echo "a es igual que b";
+}else{
+      echo "a es menor que b";
 }
-elseif ($a == $b){
-    echo "a es igual que b";
-}
-else{
-    echo "a es menor que b";
-}
+
+
+#$N1 = 1500;
+#$myName1 = 'Larry';
+$N2 = $N;
+$myName2 = 'Larry';
+$N3 = 1500;
+$myName4 = 'Larry';
+$N5 = 1500;
+$myName6 = 'Larry';
+$N7 = 1500;
+$myName7 = 'Larry';
 
 ?>

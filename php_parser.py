@@ -34,37 +34,26 @@ precedence = (
     ('nonassoc', 'INSTANCEOF'),
     ('right', 'LBRACKET'),
     ('nonassoc', 'NEW', 'CLONE'),
-    ('left', 'ELSEIF'),
-    ('left', 'ELSE'),
-    ('left', 'ENDIF'),
+    #('left', 'ELSEIF'),
+    #('left', 'ELSE'),
+    #('left', 'ENDIF'),
     ('right', 'STATIC', 'ABSTRACT', 'PRIVATE', 'PROTECTED', 'PUBLIC'),
 )
 
-def p_start(p):
-    'start : top_statement_list'
+def p_program(p):
+    'program : declaration_list'
     pass
 
-def p_top_statement_list(p):
-    '''top_statement_list : OPENTAG top_statement_list top_statement CLOSETAG top_statement_list
-                          | top_statement'''
+def p_declaration_list(p):
+    '''declaration_list : OPENTAG declaration_list declaration CLOSETAG declaration_list
+                        | declaration'''
     pass
 
-def p_top_statement(p):
-    '''top_statement : statement
-                     | function_declaration_statement
-                     | class_declaration_statement
-                     | empty'''
-    pass
-
-def p_inner_statement_list(p):
-    '''inner_statement_list : inner_statement_list inner_statement
-                            | empty'''
-    pass
-
-def p_inner_statement(p):
-    '''inner_statement : statement
-                       | function_declaration_statement
-                       | class_declaration_statement'''
+def p_declaration(p):
+    '''declaration : statement
+                   | function_declaration_statement
+                   | class_declaration_statement
+                   | empty'''
     pass
 
 def p_statement(p):
@@ -72,8 +61,8 @@ def p_statement(p):
     pass
 
 def p_statement_if(p):
-    '''statement : IF LPAREN expr RPAREN statement
-                 | IF LPAREN expr RPAREN LBLOCK statement RBLOCK elseif_list else_single'''
+    '''statement : IF LPAREN expr RPAREN LBLOCK statement RBLOCK elseif_list else_single
+                 | IF LPAREN expr RPAREN statement'''
     pass
 
 def p_elseif_list(p):
@@ -157,7 +146,9 @@ def p_static_var_list(p):
     pass
 
 def p_static_var(p):
-    '''static_var : IDVAR EQUAL static_scalar
+    '''static_var : IDVAR EQUAL NUM
+                  | IDVAR EQUAL STRING
+                  | IDVAR EQUAL ID
                   | IDVAR'''
     pass
 
@@ -171,9 +162,8 @@ def p_echo_expr_list(p):
     pass
 
 
-
 def p_function_declaration_statement(p):
-    'function_declaration_statement : FUNCTION ID LPAREN parameter_list RPAREN LBLOCK inner_statement_list RBLOCK'
+    'function_declaration_statement : FUNCTION ID LPAREN parameter_list RPAREN LBLOCK declaration RBLOCK'
     pass
 
 def p_class_declaration_statement(p):
@@ -181,7 +171,8 @@ def p_class_declaration_statement(p):
     pass
 
 def p_class_entry_type(p):
-    'class_entry_type : CLASS'
+    '''class_entry_type : CLASS
+                        | PROTECTED CLASS'''
     pass
 
 def p_class_statement_list(p):
@@ -207,7 +198,7 @@ def p_class_constant_declaration(p):
 
 
 def p_method_body(p):
-    '''method_body : LBLOCK inner_statement_list RBLOCK
+    '''method_body : LBLOCK declaration RBLOCK
                    | SEMI'''
     pass
 
@@ -225,7 +216,9 @@ def p_expr_variable(p):
     pass
 
 def p_expr_assign(p):
-    'expr : IDVAR EQUAL expr'
+    '''expr : IDVAR EQUAL NUM
+            | IDVAR EQUAL STRING
+            | IDVAR EQUAL IDVAR'''
     pass
 
 def p_variable(p):
@@ -274,6 +267,8 @@ def p_expr_binary_op(p):
     '''expr : expr AND expr
             | expr ISEQUAL expr
             | expr OR expr
+            | expr GREATER expr
+            | expr LESS expr
             | expr XOR expr
             | expr PLUS expr
             | expr MINUS expr
@@ -283,9 +278,7 @@ def p_expr_binary_op(p):
 
 def p_expr_unary_op(p):
     '''expr : PLUS expr
-            | MINUS expr
-            | GREATER expr
-            | LESS expr'''
+            | MINUS expr'''
     pass
 
 def p_expr_print(p):
