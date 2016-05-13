@@ -406,7 +406,7 @@ def t_IDVAR(t):
 
 def t_NUM(t):
     r'\d+(\.\d+)?'
-    t.value = int(t.value)
+    t.value = float(t.value)
     return t
 
 def t_ID(t):
