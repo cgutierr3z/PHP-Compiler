@@ -33,6 +33,9 @@ tokens = (
     'PRINT','PRIVATE','PROTECTED','PUBLIC','REQUIRE','REQUIRE_ONCE','RETURN',
     'STATIC','SWITCH','THROW','TRAIT','TRY','UNSET','USE','VAR','WHILE','XOR',
 
+    #boolean
+    'TRUE','FALSE',
+
     # SYMBOLS
     'PLUS','PLUSPLUS','PLUSEQUAL','MINUS','MINUSMINUS','MINUSEQUAL','TIMES',
     'TIMESTIMES','DIVIDE','LESS','LESSEQUAL','GREATER','GREATEREQUAL','EQUAL',
@@ -41,7 +44,7 @@ tokens = (
     'APOSTROPHE','DOT_DOT',
 
     # OTHERS
-    'COMMENTS','COMMENTS_C99','ID','IDVAR','NUM','STRING',
+    'COMMENTS','COMMENTS_C99','ID','IDVAR','NUM','STRING','VOID',
 )
 
 
@@ -50,6 +53,10 @@ tokens = (
 # Take from: http://www.dabeaz.com/ply/example.html
 # Ignored characters
 t_ignore = " \t"
+
+def t_VOID(t):
+    r'VOID|void'
+    return t
 
 def t_newline(t):
     r'\n+'
@@ -81,7 +88,7 @@ def t_ABSTRACT(t):
     return t
 
 def t_AND(t):
-    r'and'
+    r'and|AND|\&\&'
     return t
 
 def t_ARRAY(t):
@@ -261,7 +268,7 @@ def t_NEW(t):
     return t
 
 def t_OR(t):
-    r'or'
+    r'or|\|\||OR'
     return t
 
 def t_PRINT(t):
@@ -330,6 +337,14 @@ def t_WHILE(t):
 
 def t_XOR(t):
     r'xor'
+    return t
+
+def t_TRUE(t):
+    r'true'
+    return t
+
+def t_FALSE(t):
+    r'false'
     return t
 
 # RE SYMBOLS
