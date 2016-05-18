@@ -116,7 +116,7 @@ def p_var_declaration(p):
 	'''
 	pass
 
-def p_fun_declaration(p): #declarando funciones
+def p_fun_declaration(p):
 	'''fun_declaration : FUNCTION ID LPAREN params RPAREN
 					   | FUNCTION ID LPAREN params RPAREN compount_stmt
 	'''
@@ -128,7 +128,7 @@ def p_params(p):
 	'''
 	pass
 
-def p_param_list(p):#variabaleb, variables, etc
+def p_param_list(p):
 	'''param_list : param_list COMMA param_list
 				  | param
 	'''
@@ -141,11 +141,11 @@ def p_param(p):
 	pass
 
 
-def p_compount_stmt(p):#{argumento}
+def p_compount_stmt(p):
 	'compount_stmt : LBLOCK echo_stmt local_declarations echo_stmt statement_list echo_stmt RBLOCK'
 	pass
 
-def p_local_declarations(p):#recursividad por la izquierda
+def p_local_declarations(p):
 	'''local_declarations : local_declarations var_declaration
 						  | empty
 	'''
@@ -157,7 +157,7 @@ def p_statement_list(p):
 	'''
 	pass
 
-def p_statement(p):#declarando sentencias
+def p_statement(p):
 	'''statement : expression_stmt
 				 | compount_stmt
 				 | selection_stmt
@@ -168,7 +168,7 @@ def p_statement(p):#declarando sentencias
 	'''
 	pass
 
-def p_expression_stmt(p):#IDVAR;
+def p_expression_stmt(p):
 	'expression_stmt : expression SEMI'
 	pass
 
@@ -182,7 +182,7 @@ def p_selection_stmt_1(p):
 
 def p_selection(p):
 	'''selection : ELSE statement
-				 | ELSEIF statement
+				 | ELSEIF statement selection
 	 '''
 	pass
 
